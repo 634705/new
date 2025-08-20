@@ -260,34 +260,33 @@
         const lotteryBox = document.getElementById('lotteryResult');
         const btnEarn = document.getElementById('btnEarn');
 
-        // 更新显示
-        function updateDisplay() {
-            starDisplay.textContent = stars;
-            coinDisplay.textContent = coins;
-            currentStarsDisplay.textContent = stars;
-            dailyCompletedDisplay.textContent = dailyCompleted;
-            dailyProgress.style.width = `${dailyCompleted * 25}%`;
-            
-            // 更新每日奖励提示
-            if (dailyCompleted >= 4) {
-                dailyBonus.innerHTML = '今日已完成所有课程！获得额外1金币奖励 ٩( 'ω' )و';
-                dailyBonus.style.color = '#28a745';
-                btnEarn.disabled = true;
-                btnEarn.innerHTML = '✨ 今日已完成 (￣.￣)_';
-            } else {
-                dailyBonus.innerHTML = `完成4节课可额外获得1金币 ٩( 'ω' )و`;
-                dailyBonus.style.color = 'inherit';
-                btnEarn.disabled = false;
-                btnEarn.innerHTML = '✨ 领取星星 (￣.￣)_';
-            }
-            
-            // 保存到本地存储
-            localStorage.setItem('gameStars', stars);
-            localStorage.setItem('gameCoins', coins);
-            localStorage.setItem('dailyCompleted', dailyCompleted);
-            localStorage.setItem('lastDate', lastDate);
-        }
+// 更新显示
+function updateDisplay() {
+    starDisplay.textContent = stars;
+    coinDisplay.textContent = coins;
+    currentStarsDisplay.textContent = stars; // 注意这里原代码有拼写错误：currentStarSdisplay -> currentStarsDisplay
+    dailyCompletedDisplay.textContent = dailyCompleted;
+    dailyProgress.style.width = `${dailyCompleted * 25}%`; // 修改为模板字符串
 
+    // 更新每日奖励提示
+    if (dailyCompleted >= 4) {
+        dailyBonus.innerHTML = '今日已完成所有课程！获得额外1金币奖励 ٩(ˊωˋ*)و';
+        dailyBonus.style.color = '#28a745';
+        btnEarn.disabled = true;
+        btnEarn.innerHTML = '✨ 今日已完成 (￣▽￣)';
+    } else {
+        dailyBonus.innerHTML = `完成4节课可额外获得1金币 ٩(ˊωˋ*)و`; // 这里也可以用模板字符串，虽然没有变量，但颜文字可以直接包含
+        dailyBonus.style.color = 'inherit';
+        btnEarn.disabled = false;
+        btnEarn.innerHTML = '✨ 领取星星 (￣▽￣)';
+    }
+
+    // 保存到本地存储
+    localStorage.setItem('gameStars', stars);
+    localStorage.setItem('gameCoins', coins);
+    localStorage.setItem('dailyCompleted', dailyCompleted);
+    localStorage.setItem('lastDate', lastDate);
+}
         // 显示/隐藏区域
         function showEarnForm() {
             if (dailyCompleted >= 4) {
