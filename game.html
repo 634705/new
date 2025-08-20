@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>课堂星星大冒险 · 每日挑战版</title>
+    <title>|ω・）星星收集计划</title>
     <style>
         * {
             box-sizing: border-box;
@@ -173,8 +173,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>课堂星星大冒险 (❁´◡`❁)*✲ﾟ*</h1>
-            <p class="subtitle">每日挑战 · 赚星星 · 换金币 · 抽大奖</p>
+            <h1>|ω・）星星收集计划</h1>
+            <p class="subtitle">每日挑战 · 收集星星 · 兑换梦想</p>
             <div class="daily-info">
                 <div>今日进度: <span id="dailyCompleted">0</span>/4 节课</div>
                 <div class="progress-container">
@@ -190,9 +190,9 @@
         </div>
 
         <div class="btn-container">
-            <button id="btnEarn" onclick="showEarnForm()">✨ 领取星星 (￣.￣)_</button>
+            <button id="btnEarn" onclick="showEarnForm()">✨ 收集星星 (￣.￣)_</button>
             <button id="btnExchange" onclick="showExchangeSection()">🔄 兑换金币 (5✨ → 1🪙)</button>
-            <button id="btnSpend" onclick="showSpendSection()">🎁 消费区 ٩( 'ω' )و</button>
+            <button id="btnSpend" onclick="showSpendSection()">🎁 奖励中心 ٩( 'ω' )و</button>
         </div>
 
         <div id="earnSection" class="section">
@@ -259,35 +259,37 @@
         const resultDiv = document.getElementById('result');
         const lotteryBox = document.getElementById('lotteryResult');
         const btnEarn = document.getElementById('btnEarn');
+        const summaryInput = document.getElementById('summaryInput');
 
-// 更新显示
-function updateDisplay() {
-    starDisplay.textContent = stars;
-    coinDisplay.textContent = coins;
-    currentStarsDisplay.textContent = stars; // 注意这里原代码有拼写错误：currentStarSdisplay -> currentStarsDisplay
-    dailyCompletedDisplay.textContent = dailyCompleted;
-    dailyProgress.style.width = `${dailyCompleted * 25}%`; // 修改为模板字符串
+        // 更新显示
+        function updateDisplay() {
+            starDisplay.textContent = stars;
+            coinDisplay.textContent = coins;
+            currentStarsDisplay.textContent = stars;
+            dailyCompletedDisplay.textContent = dailyCompleted;
+            dailyProgress.style.width = `${dailyCompleted * 25}%`;
+            
+            // 更新每日奖励提示
+            if (dailyCompleted >= 4) {
+                dailyBonus.innerHTML = '今日已完成所有课程！获得额外1金币奖励 ٩( \'ω\' )و';
+                dailyBonus.style.color = '#28a745';
+                btnEarn.disabled = true;
+                btnEarn.innerHTML = '✨ 今日已完成 (￣.￣)_';
+            } else {
+                dailyBonus.innerHTML = `完成4节课可额外获得1金币 ٩( \'ω\' )و`;
+                dailyBonus.style.color = 'inherit';
+                btnEarn.disabled = false;
+                btnEarn.innerHTML = '✨ 收集星星 (￣.￣)_';
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('gameStars', stars);
+            localStorage.setItem('gameCoins', coins);
+            localStorage.setItem('dailyCompleted', dailyCompleted);
+            localStorage.setItem('lastDate', lastDate);
+        }
 
-    // 更新每日奖励提示
-    if (dailyCompleted >= 4) {
-        dailyBonus.innerHTML = '今日已完成所有课程！获得额外1金币奖励 ٩(ˊωˋ*)و';
-        dailyBonus.style.color = '#28a745';
-        btnEarn.disabled = true;
-        btnEarn.innerHTML = '✨ 今日已完成 (￣▽￣)';
-    } else {
-        dailyBonus.innerHTML = `完成4节课可额外获得1金币 ٩(ˊωˋ*)و`; // 这里也可以用模板字符串，虽然没有变量，但颜文字可以直接包含
-        dailyBonus.style.color = 'inherit';
-        btnEarn.disabled = false;
-        btnEarn.innerHTML = '✨ 领取星星 (￣▽￣)';
-    }
-
-    // 保存到本地存储
-    localStorage.setItem('gameStars', stars);
-    localStorage.setItem('gameCoins', coins);
-    localStorage.setItem('dailyCompleted', dailyCompleted);
-    localStorage.setItem('lastDate', lastDate);
-}
-        // 显示/隐藏区域
+        // 显示领取星星区域
         function showEarnForm() {
             if (dailyCompleted >= 4) {
                 showResult("今天已经完成4节课了，明天再来吧 (￣.￣)_", 'info');
@@ -297,17 +299,20 @@ function updateDisplay() {
             earnSection.style.display = 'block';
         }
 
+        // 显示兑换区域
         function showExchangeSection() {
             hideAllSections();
             exchangeSection.style.display = 'block';
             currentStarsDisplay.textContent = stars;
         }
 
+        // 显示消费区域
         function showSpendSection() {
             hideAllSections();
             spendSection.style.display = 'block';
         }
 
+        // 隐藏所有区域
         function hideAllSections() {
             earnSection.style.display = 'none';
             exchangeSection.style.display = 'none';
@@ -317,13 +322,14 @@ function updateDisplay() {
             lotteryBox.textContent = '🎰';
         }
 
+        // 隐藏指定区域
         function hideSection(sectionId) {
             document.getElementById(sectionId).style.display = 'none';
         }
 
         // 领取星星
         function earnStar() {
-            const summary = document.getElementById('summaryInput').value.trim();
+            const summary = summaryInput.value.trim();
             if (summary.length < 5) {
                 showResult("内容太简单啦，再多写几个字吧！ (:з」∠)_", 'error');
                 return;
@@ -335,13 +341,13 @@ function updateDisplay() {
             // 检查是否完成4节课
             if (dailyCompleted === 4) {
                 coins++;
-                showResult(`✅ 总结成功！获得1颗星星！<br>恭喜完成今日所有课程！额外获得1金币奖励 ٩( 'ω' )و`, 'success');
+                showResult(`✅ 总结成功！获得1颗星星！<br>恭喜完成今日所有课程！额外获得1金币奖励 ٩( \'ω\' )و`, 'success');
             } else {
                 showResult(`✅ 总结成功！获得1颗星星！继续加油！ (:з」∠)_`, 'success');
             }
             
             updateDisplay();
-            document.getElementById('summaryInput').value = '';
+            summaryInput.value = '';
             setTimeout(() => { hideAllSections(); }, 1500);
         }
 
@@ -354,7 +360,7 @@ function updateDisplay() {
             stars -= 5;
             coins++;
             updateDisplay();
-            showResult(`🔄 兑换成功！获得1枚金币！ (❁´◡`❁)*✲ﾟ*`, 'success');
+            showResult(`🔄 兑换成功！获得1枚金币！ (❁´◡\`❁)*✲ﾟ*`, 'success');
         }
 
         // 兑换小盲盒
@@ -366,7 +372,7 @@ function updateDisplay() {
             if (confirm(`确定消耗20颗星星兑换一个小盲盒吗？`)) {
                 stars -= 20;
                 updateDisplay();
-                showResult(`🎉 兑换成功！恭喜获得一个小盲盒！ ٩( 'ω' )و`, 'success');
+                showResult(`🎉 兑换成功！恭喜获得一个小盲盒！ ٩( \'ω\' )و`, 'success');
             }
         }
 
@@ -379,7 +385,7 @@ function updateDisplay() {
             if (confirm(`确定消耗30颗星星兑换一个大盲盒吗？`)) {
                 stars -= 30;
                 updateDisplay();
-                showResult(`🎉 兑换成功！恭喜获得一个大盲盒！ ٩( 'ω' )و`, 'success');
+                showResult(`🎉 兑换成功！恭喜获得一个大盲盒！ ٩( \'ω\' )و`, 'success');
             }
         }
 
@@ -433,7 +439,7 @@ function updateDisplay() {
                 lotteryBox.textContent = '🎉';
             }
 
-            showResult(`🎰 抽奖结果: ${prizeText} ٩( 'ω' )و`, prizeType);
+            showResult(`🎰 抽奖结果: ${prizeText} ٩( \'ω\' )و`, prizeType);
         }
 
         // 显示结果
